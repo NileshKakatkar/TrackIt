@@ -1,0 +1,346 @@
+/* ================== Reset ================== */
+* {
+    box-sizing: border-box;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* ================== Layout ================== */
+.dashboard-container {
+    display: flex;
+    min-height: 100vh;
+    background: #f3f4f6;
+}
+
+/* ================== Sidebar ================== */
+.sidebar {
+    width: 240px;
+    background: #111827;
+    color: #ffffff;
+    padding: 24px 16px;
+}
+
+.sidebar h2 {
+    font-size: 20px;
+    margin-bottom: 32px;
+}
+
+.sidebar nav a {
+    display: block;
+    padding: 12px 8px;
+    color: #c7d2fe;
+    text-decoration: none;
+    border-radius: 6px;
+    margin-bottom: 8px;
+}
+
+.sidebar nav a.active,
+.sidebar nav a:hover {
+    background: #2563eb;
+    color: #ffffff;
+}
+
+/* ================== Main Content ================== */
+.main-content {
+    flex: 1;
+    padding: 24px;
+    overflow-x: auto;
+}
+
+/* ================== Summary Cards ================== */
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    text-align: center;
+}
+
+.card h3 {
+    font-size: 14px;
+    color: #374151;
+    margin-bottom: 8px;
+}
+
+.card p {
+    font-size: 20px;
+    font-weight: bold;
+    color: #111827;
+}
+
+/* ================== Charts ================== */
+.charts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.chart-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+}
+
+.chart-card h4 {
+    margin-bottom: 12px;
+    color: #111827;
+    font-size: 16px;
+}
+
+.chart-placeholder {
+    height: 200px;
+    background: #e5e7eb;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6b7280;
+}
+
+/* ================== Transactions Table ================== */
+.transactions h4 {
+    margin-bottom: 12px;
+    font-size: 16px;
+    color: #111827;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+}
+
+th, td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #e5e7eb;
+    text-align: left;
+    font-size: 14px;
+}
+
+th {
+    background: #f9fafb;
+    font-weight: 600;
+    color: #374151;
+}
+
+tr:hover td {
+    background: #f3f4f6;
+}
+
+/* ================== Quick Actions ================== */
+.quick-actions {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    padding-top: 10px;
+}
+
+.quick-actions .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 20px;
+    min-height: 42px;
+    background: #2563eb;
+    color: #ffffff;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.2px;
+    box-shadow: 0 6px 14px rgba(37, 99, 235, 0.25);
+    transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.quick-actions .btn:hover {
+    background: #1d4ed8;
+    transform: translateY(-1px);
+    box-shadow: 0 10px 20px rgba(37, 99, 235, 0.35);
+}
+
+.quick-actions .btn:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);
+}
+
+.quick-actions .btn:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px rgba(37, 99, 235, 0.6);
+}
+/* ================== Modal ================== */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(17, 24, 39, 0.5); /* semi-transparent overlay */
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.modal-overlay.active {
+    display: flex;
+}
+
+.modal-card {
+    background: #82BAC4; /* mint green */
+    width: 100%;
+    max-width: 450px;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+    color: #111827;
+    transform: scale(0.95);
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.modal-overlay.active .modal-card {
+    transform: scale(1);
+}
+
+.modal-card h3 {
+    margin-bottom: 16px;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.modal-card .form-group {
+    margin-bottom: 16px;
+}
+
+.modal-card label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 6px;
+}
+
+.modal-card input,
+.modal-card select {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid #cbd5e1;
+    font-size: 14px;
+    outline: none;
+}
+
+.modal-card input:focus,
+.modal-card select:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+}
+
+.modal-card .form-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.modal-card .btn-save {
+    flex: 1;
+    background: #03454e; /* dark teal */
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 0;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.modal-card .btn-save:hover {
+    background: #02606f;
+}
+
+.modal-card .btn-cancel {
+    flex: 1;
+    background: #e5e7eb;
+    color: #111827;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 0;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.modal-card .btn-cancel:hover {
+    background: #d1d5db;
+}
+
+.trans-msg {
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+/* transaction table  */
+
+/* ===== Transactions Section ===== */
+.transactions {
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.transactions h4 {
+    margin-bottom: 16px;
+    font-size: 18px;
+    color: #111827;
+}
+
+/* ===== Table Styling ===== */
+.transactions table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.transactions thead {
+    background-color: #f1f5f9;
+}
+
+.transactions th,
+.transactions td {
+    padding: 12px 14px;
+    text-align: left;
+    font-size: 14px;
+}
+
+.transactions th {
+    color: #374151;
+    font-weight: 600;
+}
+
+.transactions td {
+    color: #4b5563;
+    border-top: 1px solid #e5e7eb;
+}
+
+/* Zebra rows */
+.transactions tbody tr:nth-child(even) {
+    background-color: #fafafa;
+}
+
+/* Hover effect */
+.transactions tbody tr:hover {
+    background-color: #eef2ff;
+}
+
+/* Amount column emphasis */
+.transactions td:last-child {
+    font-weight: 600;
+    color: #111827;
+}

@@ -1,0 +1,30 @@
+<div class="modal-overlay" id="incomeModal" onclick="closeModal('incomeModal')">
+    <div class="modal-card" onclick="event.stopPropagation()">
+        <h3>Add Income</h3>
+        <p class="trans-msg " id="incomeMsg"></p>
+        <form id="incomeForm" data-type="income">
+            <div class="form-group">
+                <label>Description</label>
+                <input type="text" name="description" placeholder="Dinner, Fuel, etc." required>
+            </div>
+             <div>
+                <label> Source</label>
+                <select name="source" required>
+                    {{ range $i, $cat := .sources }}
+                    <option value="{{ $cat }}" {{ if eq $i 0 }}selected{{ end }}>
+                        {{ $cat }}
+                    </option>
+                    {{ end }}
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Amount</label>
+                <input type="number" name="amount" step="1" placeholder="0" required>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn-save">Save</button>
+                <button type="button" class="btn-cancel" onclick="closeModal('incomeModal')">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>

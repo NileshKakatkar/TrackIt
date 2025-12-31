@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {{template "user/fragments/header" .}}
+</head>
+<body>
+
+<div class="dashboard-container">
+
+    <!-- Sidebar -->
+    {{template "user/fragments/sidemenu" .}}
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+        <!-- Page Header -->
+        <div class="page-header">
+            <h2 class="page-title">All Transactions</h2>
+            <p class="page-subtitle">Complete history of your income and expenses</p>
+        </div>
+
+        <!-- Transactions Card -->
+        <section class="card table-card">
+            <div class="card-header">
+                <h4 class="card-title">Transactions</h4>
+            </div>
+
+            <div class="table-wrapper">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Description</th>
+                            <th>Category</th>
+                            <th>Type</th>
+                            <th class="text-right">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{range $idx, $trans := .transactions}}
+                        <tr class="table-row">
+                            <td class="text-muted">{{$trans.TransactionDate}}</td>
+                            <td class="text-strong">{{$trans.Description}}</td>
+                            <td>
+                                <span class="badge badge-category">
+                                    {{$trans.Category}}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge badge-{{$trans.Type}}">
+                                    {{$trans.Type}}
+                                </span>
+                            </td>
+                            <td class="text-right amount">
+                                ${{$trans.Amount}}
+                            </td>
+                        </tr>
+                        {{end}}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+</div>
+
+</body>
+</html>

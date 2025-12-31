@@ -1,0 +1,29 @@
+<aside class="sidebar">
+    <h2>ExpenseTracker</h2>
+    <nav>
+        <a href="/user/dashboard"
+           class="{{if eq .ActivePage "dashboard"}}active{{end}}">
+            Dashboard
+        </a>
+
+        <a href="/user/transactions"
+           class="{{if eq .ActivePage "transactions"}}active{{end}}">
+            Transactions
+        </a>
+
+        <a href="/user/budgets"
+           class="{{if eq .ActivePage "budgets"}}active{{end}}">
+            Budgets
+        </a>
+
+        <a href="/user/reports"
+           class="{{if eq .ActivePage "reports"}}active{{end}}">
+            Reports
+        </a>
+
+        <a href="/user/settings"
+           class="{{if eq .ActivePage "settings"}}active{{end}}">
+            Settings
+        </a>
+    </nav>
+</aside>

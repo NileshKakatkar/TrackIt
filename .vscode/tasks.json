@@ -1,0 +1,15 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build",
+      "command": "go",
+      
+      "args": ["build", "-o", "D:/GoProjects/Project1/bin/prosrc", "main.go"],      
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    }
+  ]
+}
