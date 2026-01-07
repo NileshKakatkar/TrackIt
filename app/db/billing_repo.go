@@ -2,8 +2,8 @@ package db
 
 import (
 	"fmt"
-	"project/app/db/conn"
-	"project/app/model"
+	"trackit/app/db/conn"
+	"trackit/app/model"
 )
 
 type Billing interface {
@@ -23,7 +23,7 @@ func NewBillingRepo() Billing {
 }
 
 func (b *billing) AddBillingInfo(billing model.Billing) conn.ExecResult {
-	execRes := conn.NewSqlDb().ExecSql("insert into billing_info (username, total_balance, month_income, expenses, upcoming_bills) values ($1, $2, $3, $4, $5)", billing.Username, billing.TotalBalance, billing.MonthIncome, billing.Expenses, billing.UpcomingBills)
+	execRes := conn.NewSqlDb().ExecSql("insert into billing_info (username, total_balance, month_income, expenses, upcoming_bills) values (?,?,?,?,?)", billing.Username, billing.TotalBalance, billing.MonthIncome, billing.Expenses, billing.UpcomingBills)
 	if execRes.Error != nil {
 		fmt.Printf("error in the query: %v\n", execRes.Error)
 	}
@@ -31,7 +31,7 @@ func (b *billing) AddBillingInfo(billing model.Billing) conn.ExecResult {
 }
 
 func (b *billing) UpdateIncome(billing model.Billing) conn.ExecResult {
-	execRes := conn.NewSqlDb().ExecSql("update billing_info set total_balance=$1, month_income=$2, expenses=$3, upcoming_bills=$4 where username = $5", billing.TotalBalance, billing.MonthIncome, billing.Expenses, billing.UpcomingBills, billing.Username)
+	execRes := conn.NewSqlDb().ExecSql("update billing_info set total_balance=?, month_income=?, expenses=?, upcoming_bills=? where username = ?", billing.TotalBalance, billing.MonthIncome, billing.Expenses, billing.UpcomingBills, billing.Username)
 
 	if execRes.Error != nil {
 		fmt.Printf("Error: %v\n", execRes.Error)
@@ -40,7 +40,7 @@ func (b *billing) UpdateIncome(billing model.Billing) conn.ExecResult {
 }
 
 func (b *billing) GetBilling(username string) (model.Billing, error) {
-	queryRes := conn.NewSqlDb().QuerySql("select username, total_balance, month_income, expenses, upcoming_bills from billing_info where username=$1", username)
+	queryRes := conn.NewSqlDb().QuerySql("select username, total_balance, month_income, expenses, upcoming_bills from billing_info where username=?", username)
 	var bill model.Billing
 	var err error
 
@@ -60,8 +60,11 @@ func (b *billing) GetBilling(username string) (model.Billing, error) {
 }
 
 func (b *billing) GetMonthlyIncome(username string) int {
-	qryRes := conn.NewSqlDb().QuerySql("select IFNULL(SUM(amount),0) AS monthly_income from transactions where username=$1 and expense_type=$2 and strftime('%Y-%m', trans_date)=strftime('%Y-%m','now')", username, "Income")
-
+	qryRes := conn.NewSqlDb().QuerySql(
+		"SELECT IFNULL(SUM(amount), 0) AS monthly_income FROM transactions WHERE username=? AND expense_type=? AND trans_date >= DATE_FORMAT(CURRENT_DATE, '%Y-%m-01') AND trans_date < DATE_ADD(DATE_FORMAT(CURRENT_DATE, '%Y-%m-01'), INTERVAL 1 MONTH)",
+		username,
+		"Income",
+	)
 	var income int
 	if qryRes.Error != nil {
 		fmt.Printf("Error in the query: %v\n", qryRes.Error)
@@ -77,7 +80,11 @@ func (b *billing) GetMonthlyIncome(username string) int {
 }
 
 func (b *billing) GetMonthlyExpense(username string) int {
-	qryRes := conn.NewSqlDb().QuerySql("SELECT IFNULL(SUM(amount), 0) AS monthly_expense FROM transactions WHERE username=$1  AND expense_type=$2 AND strftime ('%Y-%m', trans_date) = strftime('%Y-%m', 'now') ", username, "Expense")
+	qryRes := conn.NewSqlDb().QuerySql(
+		"SELECT IFNULL(SUM(amount), 0) AS monthly_expense FROM transactions WHERE username=? AND expense_type=? AND trans_date >= DATE_FORMAT(CURRENT_DATE, '%Y-%m-01') AND trans_date < DATE_ADD(DATE_FORMAT(CURRENT_DATE, '%Y-%m-01'), INTERVAL 1 MONTH)",
+		username,
+		"Expense",
+	)
 	var expense int
 	if qryRes.Error != nil {
 		fmt.Printf("Error in the query: %v", qryRes.Error)
@@ -93,7 +100,7 @@ func (b *billing) GetMonthlyExpense(username string) int {
 }
 
 func (b *billing) GetTotalIncome(username string) int {
-	qryRes := conn.NewSqlDb().QuerySql(`SELECT IFNULL(SUM(amount), 0) AS total_income FROM transactions  WHERE username=$1 AND expense_type=$2 `, username, "Income")
+	qryRes := conn.NewSqlDb().QuerySql(`SELECT IFNULL(SUM(amount), 0) AS total_income FROM transactions  WHERE username=? AND expense_type=? `, username, "Income")
 	var income int
 
 	if qryRes.Error != nil {
@@ -119,7 +126,7 @@ func (b *billing) GetUserBalance(username string) model.UserBalance {
             IFNULL(SUM(CASE WHEN expense_type='Income' THEN amount END), 0) -
             IFNULL(SUM(CASE WHEN expense_type='Expense' THEN amount END), 0) AS total_balance
         FROM transactions
-        WHERE username = $1
+        WHERE username = ?
     `, username)
 
 	var balance model.UserBalance

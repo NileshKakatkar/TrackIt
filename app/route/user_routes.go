@@ -2,8 +2,8 @@ package route
 
 import (
 	"fmt"
-	userController "project/app/controller/user"
 	"time"
+	userController "trackit/app/controller/user"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/session"
@@ -23,7 +23,12 @@ func SetupUserRoutes(app *fiber.App) {
 		return c.SendFile("./public/user/images/" + c.AllParams()["*2"])
 	})
 	user.Static("/css", "./public/user/css")
-
+	app.Get("/", func(c *fiber.Ctx) error {
+		return c.Redirect("/user/login")
+	})
+	user.Get("/", func(c *fiber.Ctx) error {
+		return c.Redirect("/user/login")
+	})
 	user.Get("/login", func(c *fiber.Ctx) error {
 		return c.Render("user/login", nil)
 	})
@@ -53,6 +58,9 @@ func SetupUserRoutes(app *fiber.App) {
 	})
 	user.Post("/budget/create", func(c *fiber.Ctx) error {
 		return userController.NewTransaction().AddIncome(c, store)
+	})
+	user.Post("/budget/update", func(c *fiber.Ctx) error {
+		return userController.NewBudget().UpdateBudget(c, store)
 	})
 }
 

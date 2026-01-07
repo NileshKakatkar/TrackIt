@@ -1,6 +1,6 @@
 package service
 
-import "project/app/db"
+import "trackit/app/db"
 
 type Income interface {
 	UpdateIncome(income int, username string)

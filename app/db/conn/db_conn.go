@@ -2,9 +2,11 @@ package conn
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
 )
 
@@ -17,13 +19,28 @@ type SqlDb struct {
 func NewSqlDb() *SqlDb {
 	if sysDb == nil {
 		var err error
-		sysPath := GetPath()
-		sysDb, err = sqlx.Connect("sqlite3", sysPath)
+		// sysPath := GetPath()
+		// sysDb, err = sqlx.Connect("sqlite3", sysPath)
+		sysDb, err = Connect()
 		if err != nil {
 			fmt.Println("error here in db connection")
 		}
 	}
 	return &SqlDb{sysDb: sysDb}
+}
+
+func Connect() (*sqlx.DB, error) {
+	dsn := "root:Nilesh@045@tcp(127.0.0.1:3306)/trackit?parseTime=true"
+	var err error
+	DB, err := sqlx.Connect("mysql", dsn)
+	if err != nil {
+		log.Fatal("Error opening DB:", err)
+	}
+	if err = DB.Ping(); err != nil {
+		log.Fatal("DB connection failed:", err)
+	}
+	log.Println("✅ Connected to MySQL database TrakIt")
+	return DB, err
 }
 
 func GetPath() string {
@@ -55,11 +72,11 @@ func (sqlDb *SqlDb) execSqlQry(db *sqlx.DB, query string, params ...any) ExecRes
 	result, err := db.Exec(query, params...)
 	execResult := ExecResult{Error: err}
 	if err != nil {
-		_ = fmt.Errorf("Error while executing query: %v", err)
+		_ = fmt.Errorf("error while executing query: %v", err)
 	} else {
 		execResult.RowsAffected, _ = result.RowsAffected()
 		execResult.InsertId, _ = result.LastInsertId()
-		_ = fmt.Errorf("ExecSql rowsAffected: %d, lastInsertId: %d,",
+		_ = fmt.Errorf("execSql rowsAffected: %d, lastInsertId: %d,",
 			execResult.RowsAffected, execResult.InsertId)
 	}
 	return execResult

@@ -2,9 +2,9 @@ package db
 
 import (
 	"fmt"
-	"project/app/db/conn"
-	"project/app/model"
 	"time"
+	"trackit/app/db/conn"
+	"trackit/app/model"
 )
 
 type Transaction interface {
@@ -21,7 +21,7 @@ func NewTransaction() Transaction {
 
 func (t *transaction) AddTransaction(transaction model.Transaction) conn.ExecResult {
 	currTime := time.Now()
-	execRes := conn.NewSqlDb().ExecSql("insert into transactions (username, description, category, expense_type, amount, trans_date) values ($1, $2, $3, $4, $5, $6)", transaction.Username, transaction.Description, transaction.Category, transaction.Type, transaction.Amount, currTime)
+	execRes := conn.NewSqlDb().ExecSql("insert into transactions (username, description, category, expense_type, amount, trans_date) values (?,?,?,?,?,?)", transaction.Username, transaction.Description, transaction.Category, transaction.Type, transaction.Amount, currTime)
 
 	if execRes.Error != nil {
 		fmt.Printf("Error in query: %v", execRes.Error)
@@ -30,7 +30,7 @@ func (t *transaction) AddTransaction(transaction model.Transaction) conn.ExecRes
 }
 
 func (t *transaction) GetAllTransaction(username string) ([]model.Transaction, error) {
-	qryRes := conn.NewSqlDb().QuerySql("select username,description, category, expense_type, amount, trans_date from transactions where username= $1 order by trans_date DESC", username)
+	qryRes := conn.NewSqlDb().QuerySql("select username,description, category, expense_type, amount, trans_date from transactions where username= ? order by trans_date DESC", username)
 	var transactions []model.Transaction
 	var err error
 	if qryRes.Error != nil {
@@ -54,7 +54,7 @@ func (t *transaction) GetAllTransaction(username string) ([]model.Transaction, e
 }
 
 func (t *transaction) RecentTransactions(username string) ([]model.Transaction, error) {
-	qryRes := conn.NewSqlDb().QuerySql("select username,description, category, expense_type, amount, trans_date from transactions where username= $1 order by trans_date DESC limit 5", username)
+	qryRes := conn.NewSqlDb().QuerySql("select username,description, category, expense_type, amount, trans_date from transactions where username= ? order by trans_date DESC limit 5", username)
 	var transactions []model.Transaction
 	var err error
 	if qryRes.Error != nil {

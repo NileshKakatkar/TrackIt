@@ -1,10 +1,10 @@
 package user
 
 import (
-	"project/app/model"
 	"strconv"
+	"trackit/app/model"
 
-	"project/app/db"
+	"trackit/app/db"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/session"

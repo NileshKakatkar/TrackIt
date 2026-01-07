@@ -2,8 +2,8 @@ package user
 
 import (
 	"fmt"
-	"project/app/db"
-	"project/app/model"
+	"trackit/app/db"
+	"trackit/app/model"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/session"
@@ -115,13 +115,13 @@ func (u *userController) Dashboard(c *fiber.Ctx, store *session.Store) error {
 
 func GetCategories() []string {
 	return []string{
-		"Food",
-		"Transport",
-		"Entertainment",
-		"Health",
-		"Education",
-		"Rent",
-		"Others",
+		"food",
+		"transport",
+		"entertainment",
+		"health",
+		"education",
+		"rent",
+		"others",
 	}
 }
 

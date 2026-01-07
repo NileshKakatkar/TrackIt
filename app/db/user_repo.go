@@ -2,8 +2,8 @@ package db
 
 import (
 	"fmt"
-	"project/app/db/conn"
-	"project/app/model"
+	"trackit/app/db/conn"
+	"trackit/app/model"
 )
 
 type User interface {
@@ -19,7 +19,7 @@ func NewUser() User {
 }
 
 func (u *user) Register(user model.User) conn.ExecResult {
-	execRes := conn.NewSqlDb().ExecSql("insert into user_info (username, password, name , email, age) values ($1, $2, $3, $4, $5)", user.Username, user.Password, user.Name, user.Email, user.Age)
+	execRes := conn.NewSqlDb().ExecSql("insert into user_info (username, password, name , email, age) values (?,?,?,?,?)", user.Username, user.Password, user.Name, user.Email, user.Age)
 
 	if execRes.Error != nil {
 		_ = fmt.Errorf("error in query: %v", execRes.Error)
@@ -29,7 +29,7 @@ func (u *user) Register(user model.User) conn.ExecResult {
 
 func (u *user) GetUser(username string) (model.User, error) {
 	fmt.Println("Username: ", username)
-	queryRes := conn.NewSqlDb().QuerySql("select username, password, name, email, age from user_info where username= $1", username)
+	queryRes := conn.NewSqlDb().QuerySql("select username, password, name, email, age from user_info where username=?", username)
 	var user model.User
 	if queryRes.Error != nil {
 		fmt.Printf("error in GetUser: %v", queryRes.Error)
@@ -48,7 +48,7 @@ func (u *user) GetUser(username string) (model.User, error) {
 func (u *user) IsUserExist(user model.User) (string, bool) {
 	var message string
 	var res bool = false
-	queryRes := conn.NewSqlDb().QuerySql("select username from user_info where username= $1", user.Username)
+	queryRes := conn.NewSqlDb().QuerySql("select username from user_info where username= ?", user.Username)
 	var username string
 	if queryRes.Error == nil {
 		rows := queryRes.Rows
@@ -62,7 +62,7 @@ func (u *user) IsUserExist(user model.User) (string, bool) {
 		message = "username exist choose different one"
 		res = true
 	}
-	queryRes = conn.NewSqlDb().QuerySql("select email from user_info where email= $1", user.Email)
+	queryRes = conn.NewSqlDb().QuerySql("select email from user_info where email= ? ", user.Email)
 	var email string
 	if queryRes.Error == nil {
 		rows := queryRes.Rows

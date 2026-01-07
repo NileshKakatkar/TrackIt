@@ -10,7 +10,7 @@
             "type": "go",
             "request": "launch",
             "mode": "exec",
-            "program": "D:\\GoProjects\\Project1\\bin\\prosrc",            
+            "program": "D:\\TrackIt\\bin\\prosrc",            
             "preLaunchTask": "build"
         }
     ]

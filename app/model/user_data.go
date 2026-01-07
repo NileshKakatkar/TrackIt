@@ -34,3 +34,18 @@ type UserBalance struct {
 	TotalExpense int
 	TotalBalance int
 }
+type Budget struct {
+	Username     string `json:"username"`
+	Category     string `json:"category"`
+	BudgetAmount int    `json:"budget_amount"`
+	Spent        int    `json:"spent"`
+	Status       string `json:"status"`
+	Month        int    `json:"month"`
+}
+type UpdateBudgetRequest struct {
+	Month   int `json:"month"`
+	Budgets []struct {
+		Category     string `json:"category"`
+		BudgetAmount int    `json:"budget_amount"`
+	} `json:"budgets"`
+}
