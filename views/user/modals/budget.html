@@ -69,7 +69,7 @@
             </div>
 
             <div class="form-group budget-row">
-                <label>Health</label>
+                <label>Health</label>-
                 <input type="number" name="health" placeholder="0" step="1">
             </div>
 
@@ -93,10 +93,8 @@
     </div>
 </div>
 
-<!-- ===== JS ===== -->
 <script>
 function openBudgetModal() {
-    // set current month (1–12)
     const currentMonth = new Date().getMonth() + 1;
     document.getElementById("budgetMonth").value = currentMonth;
     document.getElementById("budgetModal").style.display = "flex";

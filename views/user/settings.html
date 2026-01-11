@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {{template "user/fragments/header" .}}
+
+    <style>
+        .settings-page {
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        .settings-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+
+        .settings-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .settings-card {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .settings-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 16px;
+        }
+
+        .settings-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .settings-row:last-child {
+            border-bottom: none;
+        }
+
+        .label {
+            color: #555;
+            font-weight: 500;
+        }
+
+        .value {
+            font-weight: 500;
+            color: #111;
+        }
+
+        .btn {
+            padding: 10px 16px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .btn-primary {
+            background: #1976d2;
+            color: #fff;
+        }
+
+        .btn-danger {
+            background: #e53935;
+            color: #fff;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #ccc;
+        }
+
+        .action-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .danger-zone {
+            margin-top: 32px;
+            border: 1px solid #f44336;
+            background: #fff5f5;
+        }
+
+        .danger-zone h3 {
+            color: #c62828;
+        }
+
+        @media (max-width: 768px) {
+            .settings-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard-container">
+        {{template "user/fragments/sidemenu" .}}
+
+        <main class="main-content">
+            <div class="settings-page">
+                <div class="settings-title">Account Settings</div>
+                <div class="settings-grid">
+                    <div class="settings-card">
+                        <h3>Account Information</h3>
+
+                        <div class="settings-row">
+                            <span class="label">Username</span>
+                            <span class="value">{{.user.Username}}</span>
+                        </div>
+
+                        <div class="settings-row">
+                            <span class="label">Full Name</span>
+                            <span class="value">{{.user.Name}}</span>
+                        </div>
+
+                        <div class="settings-row">
+                            <span class="label">Email</span>
+                            <span class="value">{{.user.Email}}</span>
+                        </div>
+
+                        <div class="settings-row">
+                            <span class="label">Age</span>
+                            <span class="value">{{.user.Age}}</span>
+                        </div>
+                    </div>
+                    <div class="settings-card">
+                        <h3>Security</h3>
+
+                        <div class="action-row">
+                            <span>Change your account password</span>
+                            <button class="btn btn-primary">Change Password</button>
+                        </div>
+
+                        <div class="action-row">
+                            <span>Sign out from all devices</span>
+                            <button class="btn btn-outline">Sign Out All</button>
+                        </div>
+
+                        <form action="signout" method="post">
+                            <button class="btn btn-danger" style="width: 100%; margin-top: 12px;">
+                                Sign Out
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                <div class="settings-card danger-zone">
+                    <h3>Danger Zone</h3>
+
+                    <div class="action-row">
+                        <span>Permanently delete your account</span>
+                        <button class="btn btn-danger">Delete Account</button>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>

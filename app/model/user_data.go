@@ -7,7 +7,6 @@ type User struct {
 	Email    string `json:"email" form:"email"`
 	Age      string `josn:"age" form:"age"`
 }
-
 type Transaction struct {
 	Username        string `json:"username"`
 	Description     string `json:"desc"`

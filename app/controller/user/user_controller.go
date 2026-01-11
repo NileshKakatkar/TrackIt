@@ -2,6 +2,7 @@ package user
 
 import (
 	"fmt"
+	"time"
 	"trackit/app/db"
 	"trackit/app/model"
 
@@ -51,8 +52,6 @@ func (u *userController) Login(c *fiber.Ctx, store *session.Store) error {
 }
 
 func (u *userController) Register(c *fiber.Ctx, store *session.Store) error {
-	fmt.Println("Getting request")
-	fmt.Println("username: ", c.FormValue("username"))
 	var user model.User
 	if err := c.BodyParser(&user); err != nil {
 		fmt.Printf("ERROR: %v", err)
@@ -103,6 +102,7 @@ func (u *userController) Dashboard(c *fiber.Ctx, store *session.Store) error {
 	Categories := GetCategories()
 	Sources := GetSources()
 	income := GetIncome(userId)
+	budget := db.NewBudgetRepo().GetBudget(userId, int(time.Now().Month()))
 	return c.Render("user/dashboard", fiber.Map{
 		"ActivePage": "dashboard",
 		// "bills":        bills,
@@ -110,6 +110,7 @@ func (u *userController) Dashboard(c *fiber.Ctx, store *session.Store) error {
 		"categories":   Categories,
 		"sources":      Sources,
 		"income":       income,
+		"budget":       budget,
 	})
 }
 

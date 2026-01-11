@@ -7,13 +7,8 @@
 
 <body>
     <div class="dashboard-container">
-
-        <!-- Sidebar -->
         {{template "user/fragments/sidemenu" .}}
-
-        <!-- Main Content -->
         <main class="main-content">
-            <!-- Summary Cards -->
             <section class="cards">
                 <div class="card balance-card">
                     <h3>Total Balance</h3>
@@ -32,8 +27,6 @@
                     <p>0 Pending</p>
                 </div>
             </section>
-
-            <!-- Charts -->
             <section class="charts">
                 <div class="chart-card">
                     <h4>Expense Breakdown</h4>
@@ -44,8 +37,6 @@
                     <div class="chart-placeholder">[Line Chart Here]</div>
                 </div>
             </section>
-
-            <!-- Recent Transactions -->
             <section class="transactions">
                 <h4>Recent Transactions</h4>
                 <table>
@@ -71,8 +62,6 @@
                     </tbody>
                 </table>
             </section>
-
-            <!-- Quick Actions -->
             <section class="quick-actions">
                 <button class="btn btn-danger" onclick="openModal('expenseModal')">Add Expense</button>
                 <button class="btn" onclick="openModal('incomeModal')">Add Income</button>
@@ -85,13 +74,7 @@
     {{ template "user/modals/budget" . }}
    <script>
 document.addEventListener("DOMContentLoaded", function () {
-
-    // Track if any modal form was submitted successfully
     let shouldReloadDashboard = false;
-
-    // -------------------------------
-    // Modal open / close
-    // -------------------------------
     function openModal(id) {
         const modal = document.getElementById(id);
         if (modal) modal.classList.add("active");
@@ -102,18 +85,12 @@ document.addEventListener("DOMContentLoaded", function () {
         const modal = document.getElementById(id);
         if (modal) {
             modal.classList.remove("active");
-
-            // Reload dashboard ONLY if something was submitted
             if (shouldReloadDashboard) {
                 window.location.reload();
             }
         }
     }
     window.closeModal = closeModal;
-
-    // -------------------------------
-    // Close modal on ESC key
-    // -------------------------------
     document.addEventListener("keydown", function (e) {
         if (e.key === "Escape") {
             document.querySelectorAll(".modal-overlay.active").forEach(m => {
@@ -125,13 +102,9 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
     });
-
-    // -------------------------------
-    // Generic AJAX handler for ALL modals
-    // -------------------------------
     document.querySelectorAll("form[data-type]").forEach(form => {
 
-        const type = form.getAttribute("data-type"); // expense | income | budget
+        const type = form.getAttribute("data-type");
         const msgEl = document.getElementById(`${type}Msg`);
 
         form.addEventListener("submit", async function (e) {
@@ -151,8 +124,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     msgEl.textContent = result.message;
                     msgEl.style.color = "#03454e";
                     form.reset();
-
-                    // MARK dashboard for reload on modal close
                     shouldReloadDashboard = true;
 
                 } else {
@@ -169,8 +140,5 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 </script>
-
-
 </body>
-
 </html>

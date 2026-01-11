@@ -1,6 +1,7 @@
 package user
 
 import (
+	"fmt"
 	"strconv"
 	"trackit/app/model"
 
@@ -13,6 +14,7 @@ import (
 type Transaction interface {
 	AddExpense(c *fiber.Ctx, store *session.Store) error
 	AddIncome(c *fiber.Ctx, store *session.Store) error
+	UpdateBudget(c *fiber.Ctx, store *session.Store) error
 }
 
 type transaction struct{}
@@ -98,4 +100,41 @@ func (t *transaction) AddIncome(c *fiber.Ctx, store *session.Store) error {
 func (t *transaction) AddTransaction(transaction model.Transaction) error {
 	res := db.NewTransaction().AddTransaction(transaction)
 	return res.Error
+}
+
+func (b *transaction) UpdateBudget(c *fiber.Ctx, store *session.Store) error {
+	sess, err := store.Get(c)
+	if err != nil {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"error": "session error",
+		})
+	}
+	username := sess.Get("username").(string)
+	fmt.Print("jgajsl")
+	var req model.UpdateBudgetRequest
+	if err := c.BodyParser(&req); err != nil {
+		fmt.Errorf("Invalid request body")
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "invalid request body",
+		})
+	}
+	for _, item := range req.Budgets {
+		budget := model.Budget{
+			Username:     username,
+			Category:     item.Category,
+			BudgetAmount: item.BudgetAmount,
+			Month:        req.Month,
+		}
+		res := db.NewBudgetRepo().UpdateBudget(budget)
+		if res.Error != nil {
+			fmt.Errorf("Failed to update budget")
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": "failed to update budget",
+			})
+		}
+	}
+	return c.JSON(fiber.Map{
+		"status":  "success",
+		"message": "Budget updated successfully",
+	})
 }

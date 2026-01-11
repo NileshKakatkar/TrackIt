@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {{template "user/fragments/header" .}}
+</head>
+
+<body>
+    <div class="dashboard-container">
+        {{template "user/fragments/sidemenu" .}}
+        <main class="main-content">
+            <section class="cards">
+                <div class="card balance-card">
+                    <h3>Total Monthly Budget</h3>
+                    <p>${{.budget.TotalLimit}}</p>
+                </div>
+
+                <div class="card expenses-card">
+                    <h3>Spent So Far</h3>
+                    <p>${{.budget.TotalSpent}}</p>
+                </div>
+
+                <div class="card income-card">
+                    <h3>Remaining Budget</h3>
+                    <p>${{.budget.Remaining}}</p>
+                </div>
+
+                <div class="card bills-card">
+                    <h3>Status</h3>
+                    {{if gt .budget.TotalSpent .budget.TotalLimit}}
+                        <p style="color:#e53935;">Exceeded</p>
+                    {{else}}
+                        <p style="color:#2e7d32;">On Track</p>
+                    {{end}}
+                </div>
+            </section>
+
+            <!-- Category Budgets -->
+            <section class="transactions">
+                <h4>Category Budgets</h4>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>Monthly Limit</th>
+                            <th>Spent</th>
+                            <th>Remaining</th>
+                            <th>Usage</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {{range .budgets}}
+                        <tr>
+                            <td>{{.Category}}</td>
+                            <td>${{.Limit}}</td>
+                            <td>${{.Spent}}</td>
+                            <td>
+                                {{if lt .Remaining 0}}
+                                    <span style="color:#e53935;">${{.Remaining}}</span>
+                                {{else}}
+                                    ${{.Remaining}}
+                                {{end}}
+                            </td>
+                            <td style="min-width:160px;">
+                                <div style="background:#eee; border-radius:6px; height:8px;">
+                                    <div style="
+                                        width: {{.Percentage}}%;
+                                        background: {{if gt .Percentage 100}}#e53935{{else}}#1976d2{{end}};
+                                        height: 8px;
+                                        border-radius: 6px;">
+                                    </div>
+                                </div>
+                                <small>{{.Percentage}}%</small>
+                            </td>
+                            <td>
+                                <button class="btn btn-outline"
+                                    onclick="openModal('budgetModal')">
+                                    Edit
+                                </button>
+                            </td>
+                        </tr>
+                        {{end}}
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Quick Actions -->
+            <section class="quick-actions">
+                <button class="btn btn-primary" onclick="openModal('budgetModal')">
+                    Add / Update Budget
+                </button>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Budget Modal -->
+    {{template "user/modals/budget" .}}
+
+    <!-- Reuse SAME JS from Dashboard -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            let shouldReloadPage = false;
+
+            function openModal(id) {
+                const modal = document.getElementById(id);
+                if (modal) modal.classList.add("active");
+            }
+            window.openModal = openModal;
+
+            function closeModal(id) {
+                const modal = document.getElementById(id);
+                if (modal) {
+                    modal.classList.remove("active");
+                    if (shouldReloadPage) {
+                        window.location.reload();
+                    }
+                }
+            }
+            window.closeModal = closeModal;
+
+            document.querySelectorAll("form[data-type='budget']").forEach(form => {
+                const msgEl = document.getElementById("budgetMsg");
+
+                form.addEventListener("submit", async function (e) {
+                    e.preventDefault();
+
+                    const data = new FormData(form);
+
+                    try {
+                        const res = await fetch("/user/budget/create", {
+                            method: "POST",
+                            body: data
+                        });
+
+                        const result = await res.json();
+
+                        if (result.status === "success") {
+                            msgEl.textContent = result.message;
+                            msgEl.style.color = "#03454e";
+                            form.reset();
+                            shouldReloadPage = true;
+                        } else {
+                            msgEl.textContent = result.message || "Failed";
+                            msgEl.style.color = "#e02424";
+                        }
+                    } catch (err) {
+                        msgEl.textContent = "Server error";
+                        msgEl.style.color = "#e02424";
+                    }
+                });
+            });
+        });
+    </script>
+
+</body>
+
+</html>

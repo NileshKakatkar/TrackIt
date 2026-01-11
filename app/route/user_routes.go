@@ -60,7 +60,13 @@ func SetupUserRoutes(app *fiber.App) {
 		return userController.NewTransaction().AddIncome(c, store)
 	})
 	user.Post("/budget/update", func(c *fiber.Ctx) error {
-		return userController.NewBudget().UpdateBudget(c, store)
+		return userController.NewTransaction().UpdateBudget(c, store)
+	})
+	user.Get("/budgets", func(c *fiber.Ctx) error {
+		return userController.NewBudget().GetBudget(c, store)
+	})
+	user.Get("/settings", func(c *fiber.Ctx) error {
+		return userController.NewSettings().GetSettings(c, store)
 	})
 }
 
